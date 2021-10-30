@@ -16,6 +16,7 @@ void ChooseDMKey();
 void ChooseRSKey();
 
 void eageDraw(const char*); //사각형 테두리
+void cc_eageDraw(const char*);
 int menuDraw();
 void gotoxy(int, int);
 

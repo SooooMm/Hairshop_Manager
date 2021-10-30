@@ -23,4 +23,4 @@ create table reservation(
 	details varchar(45)
 );
 
-
+SET @temp=0;

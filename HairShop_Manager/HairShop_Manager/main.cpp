@@ -127,7 +127,7 @@ int menuDraw() {
 void cc_draw() {
 	system("cls");
 
-	eageDraw("담당");
+	cc_eageDraw("담당");
 	setTitleXY();
 	cout << "* 고객 관리 *";
 	setSelctedXY();
@@ -255,6 +255,8 @@ void Show_CC_data() {
 		gotoxy(x += 12, y);
 		printf("%s", sql_row[1]);
 		gotoxy(x += 16, y);
+		printf("%s", sql_row[3]);
+		gotoxy(x += 12, y);
 		printf("%s", sql_row[2]);
 		gotoxy(x += 12, y);
 		printf("%s", sql_row[4]);
@@ -416,7 +418,27 @@ void eageDraw(const char* add) {
 	x = 20;
 	gotoxy(x, ++y);
 	cout << "-----------------------------------------------------------";
-	
+
+}
+void cc_eageDraw(const char* add) {
+	x = 20; y = 7;
+	gotoxy(x, y);
+	cout << "-----------------------------------------------------------";
+	gotoxy(x, ++y);
+	printf("   이름");
+
+	gotoxy(x += 12, y);
+	printf("전화번호");
+	gotoxy(x += 16, y);
+	printf("적립금");
+	gotoxy(x += 12, y);
+	printf("% s", add);
+	gotoxy(x += 12, y);
+	printf("비고");
+
+	x = 20;
+	gotoxy(x, ++y);
+	cout << "-----------------------------------------------------------";
 
 }
 void CC_add() {
@@ -562,8 +584,11 @@ void CC_reward() {
 	
 	if (strcmp(sql_row[0], check1)==0) {
 		cout << "있음" << endl;
-		sprintf(query, "update customer set reward_point=1000 where name ='%s'; ", phone);
+		sprintf(query, "select reward_point into @temp from customer where phone_num = '%s'; ", phone);
 		int a = mysql_query(mysql, query);
+
+		sprintf(query, " update customer set reward_point=(@temp+%d) where phone_num ='%s'; ", (int)(price*0.05),phone);
+		a = mysql_query(mysql, query);
 		//int num = sprintf(query, "select reward_point from customer where name = '%s'; ", name);
 		//cout << num;
 		if (a != 0) {

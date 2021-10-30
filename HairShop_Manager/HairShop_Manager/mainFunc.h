@@ -26,10 +26,14 @@ void reservationStatus();
 void CC_add();
 void CC_reward();
 void CC_revise();
+void cc_draw();
 
 void DM_add();
 void DM_revise();
+void dm_draw();
 
 void RS_add();
 void RS_revise(); 
+void rs_draw();
+
 void meno();

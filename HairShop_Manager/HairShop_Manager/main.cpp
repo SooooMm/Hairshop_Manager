@@ -124,7 +124,7 @@ int menuDraw() {
 		}
 	}
 }
-void customerCare() {
+void cc_draw() {
 	system("cls");
 
 	eageDraw("담당");
@@ -152,12 +152,14 @@ void customerCare() {
 	cout << "     적립금       ";
 	gotoxy(x, ++y);
 	cout << "------------------";
-
+}
+void customerCare() {
 	
+	cc_draw();
 	ChooseCCKey();
 	
 }
-void designerManagement() {
+void dm_draw() {
 	system("cls");
 	eageDraw("근무 시간");
 	setTitleXY();
@@ -176,12 +178,12 @@ void designerManagement() {
 	cout << "디자이너 정보 변경   ";
 	gotoxy(x, ++y);
 	cout << "------------------";
-
-	
-	ChooseDMKey();
-	
 }
-void reservationStatus() {
+void designerManagement() {
+	dm_draw();
+	ChooseDMKey();
+}
+void rs_draw() {
 	system("cls");
 	eageDraw("예약 시간");
 	setTitleXY();
@@ -210,10 +212,10 @@ void reservationStatus() {
 	cout << "------------------";
 	gotoxy(x, y += 9);
 	cout << "------------------";
-
-	
+}
+void reservationStatus() {
+	rs_draw();
 	ChooseRSKey();
-	
 }
 int keyControl() {
 	char press = _getch();
@@ -240,6 +242,7 @@ int keyControl() {
 void ChooseCCKey() {
 	
 	while (true) {
+		cc_draw();
 		char press = _getch();
 		switch (press)
 		{
@@ -259,8 +262,7 @@ void ChooseCCKey() {
 			break;
 		}
 		case '0': {
-			menuDraw();
-			break;
+			return;
 		}
 		}
 	}
@@ -283,7 +285,6 @@ void ChooseDMKey() {
 			break;
 		}
 		case '0': {
-			menuDraw();
 			return;
 		}
 		}
@@ -308,7 +309,6 @@ void ChooseRSKey() {
 			break;
 		}
 		case '0': {
-			menuDraw();
 			return;
 		}
 		case 'm':case'M': {
@@ -359,7 +359,7 @@ void CC_add() {
 
 	
 	char query[255];
-	sprintf(query, "select count(*) from customer where name = '%s'; ", name);
+	sprintf(query, "select count(*) from phone_num where oh = '%s'; ", phone);
 	int stat = mysql_query(mysql, query);
 
 	if (stat != 0) {
@@ -383,21 +383,22 @@ void CC_add() {
 		cout << "없는 회원 입니다.";
 	}
 
+	return;
 	//customerCare();
 }
 void CC_revise() {
 	char name[15], phone[20], charge[15];
-	char sname[15];
+	char sphone[15];
 	system("cls");
 	setMenuXY();
 
-	cout << "수정할 회원의 이름 : ";
-	cin >> sname;
+	cout << "수정할 회원의 전화번호 : ";
+	cin >> sphone;
 	char nquery[255];
-	sprintf(nquery, "select count(*) from customer where name = '%s'; ", sname);
+	sprintf(nquery, "select count(*) from customer where phone_num = '%s'; ", sphone);
 	int stat = mysql_query(mysql, nquery);
 
-	cout << sname << endl;
+	cout << sphone << endl;
 	if (stat != 0) {
 		printf("error : %s", mysql_error(mysql));
 		return;
@@ -425,7 +426,7 @@ void CC_revise() {
 		cout << "담당 : ";
 		cin >> charge;
 
-		sprintf(nquery, "update customer set name='%s', phone_num='%s',charge='%s' where name='%s'; ", name,phone,charge,sname);
+		sprintf(nquery, "update customer set name='%s', phone_num='%s',charge='%s' where phone_num='%s'; ", name,phone,charge,sphone);
 		int a = mysql_query(mysql, nquery);
 		if (a != 0) {
 			printf("error : %s", mysql_error(mysql));
@@ -442,7 +443,7 @@ void CC_revise() {
 	//customerCare();
 }
 void CC_reward() {
-	char name[15];
+	char phone[20];
 	int price;
 
 	system("cls");
@@ -451,14 +452,14 @@ void CC_reward() {
 	cout << "* 적립금 *";
 	x -= 5;
 	gotoxy(x, ++y);
-	cout << "이름 : ";
-	cin >> name;
+	cout << "전화번호 : ";
+	cin >> phone;
 	gotoxy(x, ++y);
 	cout << "결제 금액 : ";
 	cin >> price;
 
 	char query[255];
-	sprintf(query,"select count(*) from customer where name = '%s'; ", name);
+	sprintf(query,"select count(*) from customer where phone_num = '%s'; ", phone);
 	int stat = mysql_query(mysql, query);
 	//cout << stat;
 	sql_result = mysql_store_result(mysql);
@@ -476,7 +477,7 @@ void CC_reward() {
 	
 	if (strcmp(sql_row[0], check1)==0) {
 		cout << "있음" << endl;
-		sprintf(query, "update customer set reward_point=1000 where name ='%s'; ", name);
+		sprintf(query, "update customer set reward_point=1000 where name ='%s'; ", phone);
 		int a = mysql_query(mysql, query);
 		//int num = sprintf(query, "select reward_point from customer where name = '%s'; ", name);
 		//cout << num;
@@ -516,7 +517,7 @@ void DM_add() {
 
 
 	char query[255];
-	sprintf(query, "select count(*) from designer where name = '%s'; ", name);
+	sprintf(query, "select count(*) from designer where phone_num = '%s'; ", phone);
 	int stat = mysql_query(mysql, query);
 
 	if (stat != 0) {
@@ -548,17 +549,17 @@ void DM_add() {
 }
 void DM_revise() {
 	char name[15], phone[20], time[45];
-	char sname[15];
+	char sphone[15];
 	system("cls");
 	setMenuXY();
 
-	cout << "수정할 디자이너의 이름 : ";
-	cin >> sname;
+	cout << "수정할 디자이너의 전화번호 : ";
+	cin >> sphone;
 	char nquery[255];
-	sprintf(nquery, "select count(*) from designer where name = '%s'; ", sname);
+	sprintf(nquery, "select count(*) from designer where phone_num = '%s'; ", sphone);
 	int stat = mysql_query(mysql, nquery);
 
-	cout << sname << endl;
+	cout << sphone << endl;
 	if (stat != 0) {
 		printf("error : %s", mysql_error(mysql));
 		return;
@@ -586,7 +587,7 @@ void DM_revise() {
 		cout << "시간 : ";
 		cin >> time;
 
-		sprintf(nquery, "update designer set name='%s', phone_num='%s',time='%s' where name='%s'; ", name, phone, time, sname);
+		sprintf(nquery, "update designer set name='%s', phone_num='%s',time='%s' where phone_num='%s'; ", name, phone, time, sphone);
 		int a = mysql_query(mysql, nquery);
 		if (a != 0) {
 			printf("error : %s", mysql_error(mysql));
@@ -637,17 +638,17 @@ void RS_add() {
 }
 void RS_revise() {
 	char name[15], phone[20], time[15];
-	char sname[15];
+	char sphone[15];
 	system("cls");
 	setMenuXY();
 
-	cout << "예약한 회원의 이름 : ";
-	cin >> sname;
+	cout << "예약한 회원의 전화번호 : ";
+	cin >> sphone;
 	char nquery[255];
-	sprintf(nquery, "select count(*) from reservation where name = '%s'; ", sname);
+	sprintf(nquery, "select count(*) from reservation where phone_num = '%s'; ", sphone);
 	int stat = mysql_query(mysql, nquery);
 
-	cout << sname << endl;
+	cout << sphone << endl;
 	if (stat != 0) {
 		printf("error : %s", mysql_error(mysql));
 		return;
@@ -675,7 +676,7 @@ void RS_revise() {
 		cout << "예약시간 : ";
 		cin >> time;
 
-		sprintf(nquery, "update reservation set name='%s', phone_num='%s',re_time='%s' where name='%s'; ", name, phone, time, sname);
+		sprintf(nquery, "update reservation set name='%s', phone_num='%s',re_time='%s' where phone_num='%s'; ", name, phone, time, sphone);
 		int a = mysql_query(mysql, nquery);
 		if (a != 0) {
 			printf("error : %s", mysql_error(mysql));

@@ -27,13 +27,16 @@ void CC_add();
 void CC_reward();
 void CC_revise();
 void cc_draw();
+void Show_CC_data();
 
 void DM_add();
 void DM_revise();
 void dm_draw();
+void Show_DM_data();
 
 void RS_add();
 void RS_revise(); 
 void rs_draw();
+void Show_RS_data();
 
 void meno();

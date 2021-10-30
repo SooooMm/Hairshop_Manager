@@ -16,7 +16,7 @@ using namespace std;
 CONSOLE_SCREEN_BUFFER_INFO presentCur;
 
 void setSelctedXY() {
-	x = 80; y = 7;
+	x = 90; y = 7;
 	gotoxy(x, y);
 }
 void setTitleXY() {
@@ -239,10 +239,35 @@ int keyControl() {
 	}
 	}
 }
+void Show_CC_data() {
+	x = 20; y = 10;
+	gotoxy(x, y);
+	int stat = mysql_query(mysql, "select * from customer; ");
+
+	if (stat != 0) {
+		printf("error : %s", mysql_error(mysql));
+		return;
+	}
+	sql_result = mysql_store_result(mysql);
+
+	while (sql_row = mysql_fetch_row(sql_result)) {
+		printf("   %s", sql_row[0]);
+		gotoxy(x += 12, y);
+		printf("%s", sql_row[1]);
+		gotoxy(x += 16, y);
+		printf("%s", sql_row[2]);
+		gotoxy(x += 12, y);
+		printf("%s", sql_row[4]);
+		x = 20;
+		gotoxy(x, ++y);
+	}
+	
+}
 void ChooseCCKey() {
 	
 	while (true) {
 		cc_draw();
+		Show_CC_data();
 		char press = _getch();
 		switch (press)
 		{
@@ -268,9 +293,35 @@ void ChooseCCKey() {
 	}
 	
 }
+void Show_DM_data() {
+	x = 20; y = 10;
+	gotoxy(x, y);
+	int stat = mysql_query(mysql, "select * from designer; ");
+
+	if (stat != 0) {
+		printf("error : %s", mysql_error(mysql));
+		return;
+	}
+	sql_result = mysql_store_result(mysql);
+
+	while (sql_row = mysql_fetch_row(sql_result)) {
+		printf("   %s", sql_row[0]);
+		gotoxy(x += 12, y);
+		printf("%s", sql_row[1]);
+		gotoxy(x += 16, y);
+		printf("%s", sql_row[2]);
+		gotoxy(x += 12, y);
+		printf("%s", sql_row[3]);
+		x = 20;
+		gotoxy(x, ++y);
+	}
+
+}
 void ChooseDMKey() {
 	
 	while (true) {
+		dm_draw();
+		Show_DM_data();
 		char press = _getch();
 		switch (press)
 		{
@@ -291,10 +342,34 @@ void ChooseDMKey() {
 	}
 	
 }
-void ChooseRSKey() {
-	
+void Show_RS_data() {
+	x = 20; y = 10;
+	gotoxy(x, y);
+	int stat = mysql_query(mysql, "select * from reservation; ");
 
+	if (stat != 0) {
+		printf("error : %s", mysql_error(mysql));
+		return;
+	}
+	sql_result = mysql_store_result(mysql);
+
+	while (sql_row = mysql_fetch_row(sql_result)) {
+		printf("   %s", sql_row[0]);
+		gotoxy(x += 12, y);
+		printf("%s", sql_row[1]);
+		gotoxy(x += 16, y);
+		printf("%s", sql_row[2]);
+		gotoxy(x += 12, y);
+		printf("%s", sql_row[3]);
+		x = 20;
+		gotoxy(x, ++y);
+	}
+
+}
+void ChooseRSKey() {
 	while(true){
+		rs_draw();
+		Show_RS_data();
 		char press = _getch();
 		switch (press)
 		{
@@ -327,13 +402,21 @@ void gotoxy(int x, int y) {
 void eageDraw(const char* add) {
 	x = 20; y = 7;
 	gotoxy(x, y);
-	cout << "--------------------------------------";
+	cout << "-----------------------------------------------------------";
 	gotoxy(x, ++y);
-	printf("    이름    전화번호  %s    비고", add);
+	printf("   이름");
+	
+	gotoxy(x += 12, y); 
+	printf("전화번호");
+	gotoxy(x += 16, y); 
+	printf("% s", add);
+	gotoxy(x += 12, y);
+	printf("비고");
+
+	x = 20;
 	gotoxy(x, ++y);
-	cout << "--------------------------------------";
-	gotoxy(x, y += 13);
-	cout << "--------------------------------------";
+	cout << "-----------------------------------------------------------";
+	
 
 }
 void CC_add() {
@@ -359,7 +442,7 @@ void CC_add() {
 
 	
 	char query[255];
-	sprintf(query, "select count(*) from phone_num where oh = '%s'; ", phone);
+	sprintf(query, "select count(*) from customer where phone_num = '%s'; ", phone);
 	int stat = mysql_query(mysql, query);
 
 	if (stat != 0) {
@@ -376,11 +459,13 @@ void CC_add() {
 
 	if (strcmp(sql_row[0], check1) == 0) {
 		cout << "이미 가입한 회원 입니다." << endl;
+		Sleep(2000);
 	}
 	else if (strcmp(sql_row[0], check0) == 0) {
 		sprintf(query, "insert into customer values('%s', '%s','%s',0,'%s');", name, phone, charge, detail);
 		int a = mysql_query(mysql, query);
-		cout << "없는 회원 입니다.";
+		//cout << "없는 회원 입니다.";
+		
 	}
 
 	return;
@@ -686,6 +771,7 @@ void RS_revise() {
 	}
 	else if (strcmp(sql_row[0], check0) == 0) {
 		cout << "없는 회원 입니다.";
+		Sleep(1500);
 	}
 
 	//system("cls");

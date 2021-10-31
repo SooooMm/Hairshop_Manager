@@ -41,4 +41,3 @@ void RS_revise();
 void rs_draw();
 void Show_RS_data();
 
-void meno();

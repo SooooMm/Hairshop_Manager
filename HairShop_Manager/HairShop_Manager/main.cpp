@@ -38,6 +38,7 @@ MYSQL_ROW sql_row;
 //중복 확인 위한 변수들
 char check0[20] = "0"; 
 char check1[20] = "1";
+char checkno[20] = "없음";
 
 void main() {
 	system("cls");
@@ -518,9 +519,6 @@ void CC_add() {
 	cout << "비고 : ";
 	cin >> detail;
 
-	
-
-	
 	char query[255];
 	sprintf(query, "select count(*) from customer where phone_num = '%s'; ", phone);
 	int stat = mysql_query(mysql, query);
@@ -532,7 +530,7 @@ void CC_add() {
 
 	sql_result = mysql_store_result(mysql);
 	sql_row = mysql_fetch_row(sql_result);
-
+	
 	if (strcmp(sql_row[0], check1) == 0) {
 		system("cls");
 		gotoxy(50, 20);
@@ -540,9 +538,49 @@ void CC_add() {
 		Sleep(2000);
 	}
 	else if (strcmp(sql_row[0], check0) == 0) {
-		sprintf(query, "insert into customer values('%s', '%s','%s',0,'%s');", name, phone, charge, detail);
-		int a = mysql_query(mysql, query);
+
+		sprintf(query, "select count(*) from designer where name = '%s'; ", charge);
+		int stat = mysql_query(mysql, query);
+
+		if (stat != 0) {
+			printf("error : %s", mysql_error(mysql));
+			return;
+		}
+
+		sql_result = mysql_store_result(mysql);
+		sql_row = mysql_fetch_row(sql_result);
+
+
+		if(strcmp(sql_row[0], check1) == 0){
+			sprintf(query, "insert into customer values('%s', '%s','%s',0,'%s');", name, phone, charge, detail);
+			int a = mysql_query(mysql, query);
+
+			system("cls");
+			gotoxy(50, 20);
+			cout << "가입이 완료되었습니다." << endl;
+			Sleep(2000);
+			return;
+		}
 		
+
+		if (strcmp(charge, checkno) == 0) {
+			sprintf(query, "insert into customer values('%s', '%s','%s',0,'%s');", name, phone, charge, detail);
+			int a = mysql_query(mysql, query);
+
+			system("cls");
+			gotoxy(50, 20);
+			cout << "가입이 완료되었습니다." << endl;
+			Sleep(2000);
+			return;
+		}
+		else {
+			system("cls");
+			gotoxy(50, 20);
+			cout << "없는 디자이너 입니다." << endl;
+			Sleep(2000);
+
+		}
+
 	}
 
 	return;

@@ -25,7 +25,8 @@ void designerManagement();
 void reservationStatus();
 
 void CC_add();
-void CC_reward();
+void CC_reward_add();
+void CC_reward_use();
 void CC_revise();
 void cc_draw();
 void Show_CC_data();
